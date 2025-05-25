@@ -12,22 +12,6 @@ This is an advanced and interactive AI-powered mock interview platform designed 
 - Overall Grade: Receive an overall grade for each interview session, providing a quick assessment of your performance.
 - Recent Interviews: Easily access and review your recent interview sessions directly from the home page.
 
-## Getting Started
-To get started with the AI-Powered Mock Interview Platform, follow these steps:
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/modamaan/Ai-mock-Interview.git
-
-2. Navigate to the project directory:
-   ```bash
-   cd ai-mock-interview
-
-3. Install dependencies by running: `npm install` or `yarn install`
-
-4. Start the Server `npm run dev` or `yarn dev`
-
-5. Access the Application: Open your browser and go to http://localhost:3000 to access the application.
 
 ## Technologies Used
 - Next.js: A React framework for building server-side rendered and static web applications.
