@@ -1,14 +1,14 @@
 export default[
     {
-        link:'https://buy.stripe.com/test_9AQ4jI8fffk75igcMN',
-        price:7.99,
-        priceId:'price_1PUNYmSISOkj08jR30L0UpyY',
+        link:'https://buy.stripe.com/test_3cIbJ30zA3AifSeaOOaR200',
+        price:399.00,
+        priceId:'price_1RSDgmQEhPp5UvTBtXDWoj4K',
         duration:'Monthly'
     },
     {
-        link:'https://buy.stripe.com/test_eVabMa8fffk78us000',
-        price:49.00,
-        priceId:'price_1PUNZQSISOkj08jRFQkKuzXi',
+        link:'https://buy.stripe.com/test_28E7sN5TUdaSbBY4qqaR201',
+        price:2999.00,
+        priceId:'price_1RSDn9QEhPp5UvTBfm7dVRZd',
         duration:'Yearly'
     }
 ]

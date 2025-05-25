@@ -21,112 +21,144 @@ const page = () => {
 
       <main className="min-h-screen">
         {/* Header Section */}
-        <header className="w-full py-8 bg-gray-100 shadow-md">
-          <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-            <h1 className="text-3xl font-bold text-primary">AI Mock Interview</h1>
-            <nav className="flex flex-col sm:flex-row flex-wrap items-center justify-between mt-4 md:mt-0 space-y-4 sm:space-y-0 sm:space-x-4">
-              <div>
-                <iframe
-                  src="https://github.com/sponsors/modamaan/button"
-                  title="Sponsor modamaan on GitHub"
-                  height="32"
-                  width="114"
-                  className="border-0 rounded-lg">
-                </iframe>
-              </div>
+        <header className="w-full sticky top-0 z-50 bg-white shadow-md transition-all duration-300">
+  <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6 py-4">
+    <h1 className="text-3xl font-extrabold text-blue-600 hover:tracking-wide transition-all duration-300">
+      AI Mock Interview
+    </h1>
 
-              <div>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://github.com/modamaan/Ai-mock-Interview">
-                  <FaGithub className="w-10 h-8" />
-                </a>
-              </div>
+    <nav className="flex flex-col sm:flex-row items-center mt-4 md:mt-0 space-y-2 sm:space-y-0 sm:space-x-6">
+      <a
+        href="https://github.com/shreyaankapoor/Ai-mock-Interview.git"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-gray-800 hover:text-blue-600 transition-colors duration-300"
+        title="View on GitHub"
+      >
+        <FaGithub className="w-7 h-7" />
+      </a>
 
-              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0">
-                <a href="#features" className="text-lg text-gray-800 mx-2 md:mx-4">Features</a>
-                <a href="#testimonials" className="text-lg text-gray-800 mx-2 md:mx-4">Testimonials</a>
-                <a href="#contact" className="text-lg text-gray-800 mx-2 md:mx-4">Contact</a>
-              </div>
-            </nav>
-          </div>
-        </header>
+      <a
+        href="#features"
+        className="text-lg text-gray-700 hover:text-blue-600 font-medium transition duration-300"
+      >
+        Features
+      </a>
+      <a
+        href="#testimonials"
+        className="text-lg text-gray-700 hover:text-blue-600 font-medium transition duration-300"
+      >
+        Testimonials
+      </a>
+      <a
+        href="#contact"
+        className="text-lg text-gray-700 hover:text-blue-600 font-medium transition duration-300"
+      >
+        Contact
+      </a>
+    </nav>
+  </div>
+</header>
 
         {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center text-center py-20 bg-gradient-to-r from-gray-900 to-gray-400  px-6 md:px-0">
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Ace Your Next Interview</h2>
-          <p className="mt-4 text-lg md:text-xl text-white ">Practice with AI-powered mock interviews and get personalized feedback</p>
-          <div className="mt-6 flex flex-col md:flex-row">
-            <a
-              href="/dashboard"
-              className="px-6 py-3 mb-4 md:mb-0 md:mr-4 text-lg font-semibold bg-white !text-primary-600 rounded-lg shadow-lg hover:bg-gray-100"
-            >
-              Get Started
-            </a>
-            <a
-              href="#features"
-              className="px-6 py-3 text-lg font-semibold border border-white rounded-lg hover:bg-white hover:text-black-600"
-            >
-              Learn More
-            </a>
-          </div>
-        </section>
+        <section className="relative bg-gradient-to-br from-[#1a1a40] via-[#3f2b96] to-[#a8c0ff] py-28 text-white px-6 md:px-0 overflow-hidden">
+  <div className="absolute top-0 left-0 w-full h-full bg-[url('/grid.svg')] opacity-10 z-0" />
+
+  <div className="relative z-10 max-w-6xl mx-auto text-center">
+    <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+      <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+        Ace Your Next Interview
+      </span>
+    </h1>
+    <p className="mt-6 text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
+      Get personalized feedback and AI-powered mock interviews to boost your confidence and performance.
+    </p>
+
+    <div className="mt-10 flex flex-col sm:flex-row justify-center gap-5">
+      <a
+        href="/dashboard"
+        className="px-8 py-4 bg-white text-indigo-800 font-bold rounded-xl shadow-lg hover:bg-gray-100 transition duration-300"
+      >
+        Get Started
+      </a>
+      <a
+        href="#features"
+        className="px-8 py-4 border-2 border-white font-bold rounded-xl hover:bg-white hover:text-black transition duration-300"
+      >
+        Learn More
+      </a>
+    </div>
+  </div>
+
+  {/* Decorative glass card for style */}
+  <div className="hidden md:block absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-[90%] max-w-5xl h-40 bg-white bg-opacity-10 backdrop-blur-md rounded-xl shadow-2xl border border-white border-opacity-10"></div>
+</section>
 
         {/* Features Section */}
-        <section id="features" className="py-16 bg-white px-6 md:px-0">
-          <div className="container mx-auto text-center">
-            <h2 className="text-4xl font-bold text-gray-800">Features</h2>
-            <p className="mt-4 text-lg text-gray-800">
-              Our AI Mock Interview platform offers a range of powerful features:
-            </p>
-            <div className="flex flex-wrap justify-center mt-8">
-              <div className="w-full md:w-1/3 px-4 py-8">
-                <div className="bg-blue-100 rounded-lg p-6 shadow-md">
-                  <h3 className="text-2xl font-semibold text-black-600">AI Mock Interviews</h3>
-                  <p className="mt-2 text-gray-600">Experience realistic interview scenarios with our advanced AI.</p>
-                </div>
-              </div>
-              <div className="w-full md:w-1/3 px-4 py-8">
-                <div className="bg-blue-100 rounded-lg p-6 shadow-md">
-                  <h3 className="text-2xl font-semibold text-black-600">Instant Feedback</h3>
-                  <p className="mt-2 text-gray-600">Get instant, personalized feedback to improve your performance.</p>
-                </div>
-              </div>
-              <div className="w-full md:w-1/3 px-4 py-8">
-                <div className="bg-blue-100 rounded-lg p-6 shadow-md">
-                  <h3 className="text-2xl font-semibold text-black-600">Comprehensive Reports</h3>
-                  <p className="mt-2 text-gray-600">Receive detailed reports highlighting your strengths and weaknesses.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <section id="features" className="py-20 bg-gray-100 px-6 md:px-0">
+  <div className="max-w-7xl mx-auto text-center">
+    <h2 className="text-4xl font-extrabold text-gray-900 mb-6">✨ Powerful Features</h2>
+    <p className="text-lg text-gray-600 mb-12">
+      Get access to a suite of tools to help you nail your interviews with confidence.
+    </p>
+    
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
+      {[
+        {
+          title: 'AI Mock Interviews',
+          desc: 'Experience realistic interview scenarios with our advanced AI.',
+          icon: '🤖',
+        },
+        {
+          title: 'Instant Feedback',
+          desc: 'Get immediate insights and suggestions to improve your answers.',
+          icon: '⚡',
+        },
+        {
+          title: 'Comprehensive Reports',
+          desc: 'Visualize strengths & weaknesses to track your progress.',
+          icon: '📊',
+        }
+      ].map((feature, i) => (
+        <div key={i} className="bg-white rounded-2xl shadow-xl p-8 hover:-translate-y-1 hover:shadow-2xl transition-transform duration-300">
+          <div className="text-5xl mb-4">{feature.icon}</div>
+          <h3 className="text-2xl font-bold text-indigo-700 mb-2">{feature.title}</h3>
+          <p className="text-gray-600">{feature.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
         {/* Testimonials Section */}
-        <section id="testimonials" className="py-16 bg-gray-50 px-6 md:px-0">
-          <div className="container mx-auto text-center">
-            <h2 className="text-4xl font-bold text-gray-800">What Our Users Say</h2>
-            <div className="flex flex-wrap justify-center mt-8">
-              <div className="w-full md:w-1/2 px-4 py-8">
-                <div className="bg-white rounded-lg p-6 shadow-md">
-                  <p className="text-gray-600">
-                    "The AI mock interviews were incredibly helpful. I felt much more confident going into my real interview."
-                  </p>
-                  <h4 className="mt-4 text-lg font-semibold text-blue-600">- Alex Johnson</h4>
-                </div>
-              </div>
-              <div className="w-full md:w-1/2 px-4 py-8">
-                <div className="bg-white rounded-lg p-6 shadow-md">
-                  <p className="text-gray-600">
-                    "The feedback was spot on and helped me improve my answers. Highly recommend this service!"
-                  </p>
-                  <h4 className="mt-4 text-lg font-semibold text-blue-600">- Sarah Williams</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <section id="testimonials" className="py-20 bg-gradient-to-br from-white to-blue-50 px-6 md:px-0">
+  <div className="max-w-6xl mx-auto text-center">
+    <h2 className="text-4xl font-extrabold text-gray-900 mb-6">💬 What Our Users Say</h2>
+    <p className="text-lg text-gray-600 mb-12">Real feedback from real users.</p>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {[
+        {
+          quote: "The AI mock interviews were incredibly helpful. I felt much more confident going into my real interview.",
+          name: "Shreyaan Kapoor"
+        },
+        {
+          quote: "The feedback was spot on and helped me improve my answers. Highly recommend this service!",
+          name: "Muskan Gupta"
+        },
+        {
+          quote: "The insights were incredibly helpful and allowed me to refine my responses. I would definitely recommend using this platform!",
+          name: "Shashank Chauhan"
+        }
+      ].map((testimony, i) => (
+        <div key={i} className="bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300">
+          <p className="text-gray-700 italic mb-4">“{testimony.quote}”</p>
+          <h4 className="text-blue-600 font-semibold">- {testimony.name}</h4>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
         {/* Contact Section */}
         <section id="contact" className="py-16 bg-white px-6 md:px-0">
@@ -135,7 +167,7 @@ const page = () => {
       </main>
 
       <footer className="py-8 bg-black text-white text-center">
-        <p>© 2024 AI Mock Interview. All rights reserved.</p>
+        <p>© 2025 AI Mock Interview. All rights reserved.</p>
       </footer>
     </div>
   )
