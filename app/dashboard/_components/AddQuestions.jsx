@@ -49,26 +49,43 @@ const AddQuestions = () => {
     );
 
     const InputPrompt = `
-    Job Positions: ${jobPosition},
-    Job Description: ${jobDesc},
-    Years of Experience: ${jobExperience},
-    Which type of question: ${typeQuestion},
-    This company previous question: ${company},
-    Based on this information, please provide 5 interview questions with answers in JSON format.
-    Each question and answer should be fields in the JSON. Ensure "Question" and "Answer" are fields.
-}  
-  `;
+You are an AI that only responds in JSON format.
+
+Generate exactly 5 technical interview questions and answers for the role below.
+
+Return ONLY a pure JSON array of objects. Do NOT include any introduction or markdown (like \`\`\`json).
+
+Each object should have:
+- "Question": the question as a string.
+- "Answer": the answer as a string.
+
+Job Position: ${jobPosition}
+Job Description: ${jobDesc}
+Years of Experience: ${jobExperience}
+Type of Questions: ${typeQuestion}
+Target Company: ${company}
+`;
     console.log("InputPrompt:", InputPrompt);
 
     try {
       const result = await chatSession.sendMessage(InputPrompt);
-      const MockQuestionJsonResp = result.response
-        .text()
-        .replace("```json", "")
-        .replace("```", "")
+      let rawResponse = result.response.text().trim();
+
+      // Remove code blocks or markdown
+      rawResponse = rawResponse
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
         .trim();
+
+      // Try to extract the JSON part only
+      const jsonMatch = rawResponse.match(/\[.*\]|\{.*\}/s);
+      if (!jsonMatch) {
+        throw new Error("AI response does not contain valid JSON.");
+      }
+
+      const MockQuestionJsonResp = jsonMatch[0]; // clean JSON
       // console.log("Parsed data", JSON.parse(MockQuestionJsonResp));
-      
+
       console.log("JSON RESPONSE", MockQuestionJsonResp);
       // console.log("Parsed RESPONSE", JSON.parse(MockQuestionJsonResp))
 
@@ -114,7 +131,7 @@ const AddQuestions = () => {
         <h2 className=" text-lg text-center">+ Add New Questions</h2>
       </div>
 
-      <Dialog open={openDailog}>
+      <Dialog open={openDailog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>What model questions are you seeking</DialogTitle>
@@ -188,7 +205,7 @@ const AddQuestions = () => {
                 <div className="flex gap-5 justify-end">
                   <Button
                     type="button"
-                    variant="goast"
+                    variant="ghost"
                     onClick={() => setOpenDialog(false)}
                   >
                     Cancel

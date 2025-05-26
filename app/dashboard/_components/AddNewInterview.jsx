@@ -38,18 +38,40 @@ const AddNewInterview = () => {
     console.log(jobPosition, jobDesc, jobExperience);
 
     const InputPrompt = `
-  Job Positions: ${jobPosition}, 
-  Job Description: ${jobDesc}, 
-  Years of Experience: ${jobExperience}. 
-  Based on this information, please provide 5 interview questions with answers in JSON format, ensuring "Question" and "Answer" are fields in the JSON.
+You are an AI assistant helping with mock interview preparation.
+
+Based on the following inputs:
+
+- Job Position: ${jobPosition}
+- Job Description: ${jobDesc}
+- Years of Experience: ${jobExperience}
+
+Generate exactly 5 interview questions along with their answers.
+
+Return only a valid JSON array of objects, with each object containing the fields:
+
+- "Question": string
+- "Answer": string
+
+Do not include any explanation, markdown syntax (like triple backticks), or extra text—just the raw JSON.
 `;
 
     const result = await chatSession.sendMessage(InputPrompt);
-    const MockJsonResp = result.response
-      .text()
-      .replace("```json", "")
-      .replace("```", "")
+    let rawResponse = result.response.text().trim();
+
+    // Remove code blocks or markdown
+    rawResponse = rawResponse
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
       .trim();
+
+    // Try to extract the JSON part only
+    const jsonMatch = rawResponse.match(/\[.*\]|\{.*\}/s);
+    if (!jsonMatch) {
+      throw new Error("AI response does not contain valid JSON.");
+    }
+
+    const MockJsonResp = jsonMatch[0]; // clean JSON
     console.log(JSON.parse(MockJsonResp));
     // const parsedResp = MockJsonResp
     setJsonResponse(MockJsonResp);
@@ -67,7 +89,7 @@ const AddNewInterview = () => {
           createdAt: moment().format("YYYY-MM-DD"),
         })
         .returning({ mockId: MockInterview.mockId });
-        
+
       console.log("Inserted ID:", resp);
 
       if (resp) {
@@ -88,7 +110,7 @@ const AddNewInterview = () => {
       >
         <h2 className=" text-lg text-center">+ Add New</h2>
       </div>
-      <Dialog open={openDailog}>
+      <Dialog open={openDailog} onOpenChange={setOpenDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="text-2xl">
@@ -137,7 +159,7 @@ const AddNewInterview = () => {
                 <div className="flex gap-5 justify-end">
                   <Button
                     type="button"
-                    variant="goast"
+                    variant="ghost"
                     onClick={() => setOpenDialog(false)}
                   >
                     Cancel
