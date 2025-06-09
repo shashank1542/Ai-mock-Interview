@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import Webcam from "react-webcam";
 import { Mic } from "lucide-react";
 import { toast } from "sonner";
+import { getCohereFeedback } from "@/utils/CohereAIModal";
 import { chatSession } from "@/utils/GeminiAIModal";
 import { db } from "@/utils/db";
 import { UserAnswer } from "@/utils/schema";
@@ -48,7 +49,7 @@ const RecordAnswerSection = ({
       };
 
       mediaRecorderRef.current.onstop = async () => {
-        const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
         await transcribeAudio(audioBlob);
       };
 
@@ -56,7 +57,9 @@ const RecordAnswerSection = ({
       setIsRecording(true);
     } catch (error) {
       console.error("Error starting recording:", error);
-      toast("Error starting recording. Please check your microphone permissions.");
+      toast(
+        "Error starting recording. Please check your microphone permissions."
+      );
     }
   };
 
@@ -71,13 +74,13 @@ const RecordAnswerSection = ({
     try {
       setLoading(true);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
+
       // Convert audio blob to base64
       const reader = new FileReader();
       reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
-        const base64Audio = reader.result.split(',')[1];
-        
+        const base64Audio = reader.result.split(",")[1];
+
         const result = await model.generateContent([
           "Transcribe the following audio:",
           { inlineData: { data: base64Audio, mimeType: "audio/webm" } },
@@ -94,47 +97,93 @@ const RecordAnswerSection = ({
     }
   };
 
+  const fetchAIResponses = async (userAnswer, question) => {
+    try {
+      console.log("Fetching AI feedback...");
+
+      const geminiFeedbackResp = await chatSession.sendMessage(
+        `Provide rating (1-10) and feedback in JSON format.
+         Question: ${question}
+         User Answer: ${userAnswer}`
+      );
+
+      const cohereFeedbackResp = await getCohereFeedback(userAnswer, question); // Fix variable name
+
+      console.log("Gemini Feedback:", geminiFeedbackResp);
+      console.log("Cohere Feedback:", cohereFeedbackResp);
+
+      return { geminiFeedbackResp, cohereFeedbackResp }; // Ensure both responses are returned
+    } catch (error) {
+      console.error("Error fetching AI feedback:", error);
+      return { geminiFeedbackResp: null, cohereFeedbackResp: null };
+    }
+  };
+
   const updateUserAnswer = async () => {
     try {
       setLoading(true);
-      const feedbackPrompt =
-        "Question:" +
-        mockInterviewQuestion[activeQuestionIndex]?.Question +
-        ", User Answer:" +
-        userAnswer +
-        " , Depends on question and user answer for given interview question" +
-        " please give us rating for answer and feedback as area of improvement if any " +
-        "in just 3 to 5 lines to improve it in JSON format with rating field and feedback field";
 
-      const result = await chatSession.sendMessage(feedbackPrompt);
+      const feedbackPrompt = `Question: ${mockInterviewQuestion[activeQuestionIndex]?.Question}
+         User Answer: ${userAnswer}
+         Provide a rating (1-10) and feedback for improvement in JSON format with 'rating' and 'feedback' fields.`;
 
-      let MockJsonResp = result.response.text();
-      console.log(MockJsonResp);
+      // Fetch AI feedback from both Gemini & Cohere
+      const geminiResponse = await chatSession.sendMessage(feedbackPrompt);
+      const cohereFeedbackResp = await getCohereFeedback(
+        userAnswer,
+        mockInterviewQuestion[activeQuestionIndex]?.Question
+      );
+      console.log("Cohere Feedback:", cohereFeedbackResp); // Debugging log
 
-      // Removing possible extra text around JSON
-      MockJsonResp = MockJsonResp.replace("```json", "").replace("```", "");
+      // Extract Gemini feedback
+      let MockJsonResp = await geminiResponse.response.text();
 
-      // Attempt to parse JSON
-      let jsonFeedbackResp;
-      try {
-        jsonFeedbackResp = JSON.parse(MockJsonResp);
-      } catch (e) {
-        throw new Error("Invalid JSON response: " + MockJsonResp);
+      // Ensure we extract valid JSON by finding where it starts
+      const jsonStartIndex = MockJsonResp.indexOf("{");
+      if (jsonStartIndex !== -1) {
+        MockJsonResp = MockJsonResp.substring(jsonStartIndex).trim();
       }
 
+      // Clean unwanted markdown formatting
+      MockJsonResp = MockJsonResp.replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      console.log("Cleaned Gemini Response:", MockJsonResp); // Debugging
+
+      let geminiFeedbackResp;
+      try {
+        geminiFeedbackResp = JSON.parse(MockJsonResp);
+      } catch (error) {
+        console.error("Error parsing Gemini feedback:", error);
+        geminiFeedbackResp = { rating: "N/A", feedback: MockJsonResp };
+      }
+
+      // ✅ Declare fallback values for Cohere AI before saving
+      const safeCohereFeedback =
+        cohereFeedbackResp?.feedback || "Cohere AI feedback unavailable";
+      const safeCohereRating = cohereFeedbackResp?.rating || "N/A";
+
+      // Store both AI responses in the database
       const resp = await db.insert(UserAnswer).values({
         mockIdRef: interviewData?.mockId,
         question: mockInterviewQuestion[activeQuestionIndex]?.Question,
         correctAns: mockInterviewQuestion[activeQuestionIndex]?.Answer,
         userAns: userAnswer,
-        feedback: jsonFeedbackResp?.feedback,
-        rating: jsonFeedbackResp?.rating,
+        feedback: JSON.stringify({
+          gemini: geminiFeedbackResp.feedback,
+          cohere: safeCohereFeedback,
+        }),
+        rating: JSON.stringify({
+          gemini: geminiFeedbackResp.rating,
+          cohere: safeCohereRating,
+        }),
         userEmail: user?.primaryEmailAddress?.emailAddress,
         createdAt: moment().format("YYYY-MM-DD"),
       });
 
       if (resp) {
-        toast("User Answer recorded successfully");
+        toast("User Answer recorded successfully with dual AI feedback!");
       }
       setUserAnswer("");
       setLoading(false);
@@ -154,7 +203,12 @@ const RecordAnswerSection = ({
             style={{ height: 250, width: "100%", zIndex: 10 }}
           />
         ) : (
-          <Image src={"/camera.jpg"} width={200} height={200} alt="Camera placeholder" />
+          <Image
+            src={"/camera.jpg"}
+            width={200}
+            height={200}
+            alt="Camera placeholder"
+          />
         )}
       </div>
       <div className="md:flex mt-4 md:mt-8 md:gap-5">
@@ -189,23 +243,6 @@ const RecordAnswerSection = ({
 };
 
 export default RecordAnswerSection;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use client";
 // import { Button } from "@/components/ui/button";
