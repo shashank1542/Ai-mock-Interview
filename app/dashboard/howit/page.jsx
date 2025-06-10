@@ -16,18 +16,18 @@ const HowItWorks = () => {
           content="Learn how our AI Mock Interview works."
         />
       </Head>
-      <main className="bg-gray-100 p-8 mt-10">
-        <h1 className="text-4xl font-bold text-center mb-8">How It Works</h1>
+      <main className="bg-gray-300 p-8 mt-10">
+        <h1 className="text-4xl font-bold text-center text-black mb-8">How It Works</h1>
         <section className="space-y-8">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
               <AccordionTrigger>
-                <h2 className="text-xl md:text-2xl font-semibold mb-4">
+                <h2 className="text-xl md:text-2xl font-semibold text-black mb-4">
                   Step 1: Prepare for the Interview
                 </h2>
               </AccordionTrigger>
               <AccordionContent>
-                <p className="text-gray-700">
+                <p className="text-gray-700 text-black">
                   Get ready by selecting the type of interview and providing
                   some details about the job position.
                 </p>
@@ -36,12 +36,12 @@ const HowItWorks = () => {
             <AccordionItem value="item-2">
               <AccordionTrigger>
                 {" "}
-                <h2 className="text-xl md:text-2xl font-semibold mb-4">
+                <h2 className="text-xl md:text-2xl font-semibold text-black mb-4">
                   Step 2: Start the AI Interview
                 </h2>
               </AccordionTrigger>
               <AccordionContent>
-                <p className="text-gray-700">
+                <p className="text-gray-700 ">
                   Our AI will ask you a series of questions and evaluate your
                   responses in real-time.
                 </p>
@@ -49,7 +49,7 @@ const HowItWorks = () => {
             </AccordionItem>
             <AccordionItem value="item-3">
               <AccordionTrigger>
-                <h2 className="text-xl md:text-2xl font-semibold mb-4">
+                <h2 className="text-xl md:text-2xl text-black font-semibold mb-4">
                   Step 3: Receive Feedback
                 </h2>
               </AccordionTrigger>

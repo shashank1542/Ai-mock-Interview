@@ -16,18 +16,18 @@ const Upgrade = () => {
               className="rounded-2xl border border-gray-200 p-6 shadow-sm sm:px-8 lg:p-12"
             >
               <div className="text-center">
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-medium text-white-900">
                   {item.duration}
                   <span className="sr-only">Plan</span>
                 </h2>
 
                 <p className="mt-2 sm:mt-4">
-                  <strong className="text-3xl font-bold text-gray-900 sm:text-4xl">
+                  <strong className="text-3xl font-bold text-white-900 sm:text-4xl">
                     {" "}
                     {item.price}${" "}
                   </strong>
 
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-white-700">
                     / {item.duration}
                   </span>
                 </p>
@@ -50,7 +50,7 @@ const Upgrade = () => {
                     />
                   </svg>
 
-                  <span className="text-gray-700"> 10 users included </span>
+                  <span className="text-gray-300"> 10 users included </span>
                 </li>
 
                 <li className="flex items-center gap-1">
@@ -69,7 +69,7 @@ const Upgrade = () => {
                     />
                   </svg>
 
-                  <span className="text-gray-700"> 2GB of storage </span>
+                  <span className="text-gray-300"> 2GB of storage </span>
                 </li>
 
                 <li className="flex items-center gap-1">
@@ -88,7 +88,7 @@ const Upgrade = () => {
                     />
                   </svg>
 
-                  <span className="text-gray-700"> Email support </span>
+                  <span className="text-gray-300"> Email support </span>
                 </li>
 
                 <li className="flex items-center gap-1">
@@ -107,7 +107,7 @@ const Upgrade = () => {
                     />
                   </svg>
 
-                  <span className="text-gray-700"> Help center access </span>
+                  <span className="text-gray-300"> Help center access </span>
                 </li>
               </ul>
 

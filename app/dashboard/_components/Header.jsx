@@ -5,17 +5,20 @@ import { UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "@/components/ModeToggle";
 import Link from "next/link";
+
 const Header = ({ logo }) => {
   const [isUserButtonLoaded, setUserButtonLoaded] = useState(false);
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMenu = ()=>{
-    setIsOpen(!isOpen)
-  }
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   const SkeletonLoader = () => (
-    <div className="w-8 h-8 bg-gray-300 rounded-full animate-pulse"></div>
+    <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full animate-pulse shadow-[0_0_15px_cyan]" />
   );
+
+  const path = usePathname();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,121 +28,120 @@ const Header = ({ logo }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const path = usePathname();
-
-  useEffect(() => {
-    console.log(path);
-  }, []);
   return (
-    <div className=" bg-secondary shadow-sm ">
-      <div className="w-[80%] m-auto flex gap-4 items-center justify-between">
-        <Link className="hidden md:block"  href="/dashboard">
-          <Image src={logo} width={80} height={80} alt="logo" />
+    <header className="sticky top-0 z-50 bg-black/40 backdrop-blur-lg border-b border-cyan-600/50 shadow-[0_0_20px_cyan]">
+      <div className="max-w-7xl mx-auto flex items-center justify-between p-4 md:p-6 text-white font-['Orbitron']">
+        {/* Logo */}
+        <Link href="/dashboard" className="flex items-center space-x-2 hover:brightness-125 transition">
+          <Image
+            src={logo}
+            width={60}
+            height={60}
+            alt="logo"
+            className="drop-shadow-[0_0_10px_cyan]"
+          />
+          <span className="text-2xl font-bold text-cyan-400 tracking-wide select-none">
+            AI Mockup
+          </span>
         </Link>
-        <ul className="hidden md:flex gap-6">
-          <Link href="/dashboard">
-            <li
-              className={`hover:text-black hover:font-bold transition-all cursor-pointer ${
-                path == "/dashboard" && "text-black font-bold"
-              }`}
-            >
-              Dashboard
-            </li>
-          </Link>
-          <Link href="/dashboard/question">
-          <li
-            className={`hover:text-black hover:font-bold transition-all cursor-pointer ${
-              path == "/dashboard/question" && "text-black font-bold"
-            }`}
-          >
-            Questions
-          </li>
-          </Link>
-          
-          <Link href="/dashboard/upgrade">
-            <li
-              className={`hover:text-black hover:font-bold transition-all cursor-pointer ${
-                path == "/dashboard/upgrade" && "text-black font-bold"
-              }`}
-            >
-              Upgrade
-            </li>
-          </Link>
 
-          <Link href="/dashboard/howit">
-            <li
-              className={`hover:text-black hover:font-bold transition-all cursor-pointer ${
-                path == "/dashboard/howit" && "text-black font-bold"
-              }`}
-            >
-              How it works?
-            </li>
-          </Link>
-        </ul>
-        <div className="md:hidden">
-          <button onClick={toggleMenu} className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-            <span className="sr-only">Open main menu</span>
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-10 text-lg">
+          {[
+            { href: "/dashboard", label: "Dashboard" },
+            { href: "/dashboard/question", label: "Questions" },
+            { href: "/dashboard/upgrade", label: "Upgrade" },
+            { href: "/dashboard/howit", label: "How it works?" },
+          ].map(({ href, label }) => (
+            <Link key={href} href={href} legacyBehavior>
+              <a
+                className={`relative px-3 py-2 cursor-pointer transition-all 
+                ${
+                  path === href
+                    ? "text-cyan-400 font-semibold after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[2px] after:bg-cyan-400"
+                    : "text-white hover:text-cyan-300"
+                }`}
+              >
+                {label}
+              </a>
+            </Link>
+          ))}
+        </nav>
+
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden flex items-center gap-6">
+          <ModeToggle />
+          {isUserButtonLoaded ? (
+            <UserButton />
+          ) : (
+            <SkeletonLoader />
+          )}
+          <button
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+            className="p-2 rounded-md hover:bg-cyan-600/20 transition"
+          >
             {isOpen ? (
-              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-7 h-7 text-cyan-400 drop-shadow-[0_0_5px_cyan]"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             ) : (
-              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              <svg
+                className="w-7 h-7 text-cyan-400 drop-shadow-[0_0_5px_cyan]"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
               </svg>
             )}
           </button>
         </div>
-        <div className="flex gap-10" >
-          <ModeToggle  />
-          {isUserButtonLoaded ? <UserButton /> : <SkeletonLoader />}
-        </div>
       </div>
+
+      {/* Mobile Navigation */}
       {isOpen && (
-        <div className="md:hidden">
-          <div className="px-5">
-          <ul className="px-2 pt-2 pb-3 space-y-1 sm:px-3" >
-          <Link href="/dashboard">
-            <li
-              className={`hover:text-black hover:font-bold transition-all cursor-pointer ${
-                path == "/dashboard" && "text-black font-bold"
-              }`}
-            >
-              Dashboard
-            </li>
-          </Link>
-          <Link href="/dashboard/question">
-          <li
-            className={`hover:text-black hover:font-bold transition-all cursor-pointer ${
-              path == "/dashboard/question" && "text-black font-bold"
-            }`}
-          >
-            Questions
-          </li>
-          </Link>
-          <Link href="/dashboard/upgrade">
-            <li
-              className={`hover:text-black hover:font-bold transition-all cursor-pointer ${
-                path == "/dashboard/upgrade" && "text-black font-bold"
-              }`}
-            >
-              Upgrade
-            </li>
-          </Link>
-          <Link href="/dashboard/howit">
-            <li
-              className={`hover:text-black hover:font-bold transition-all cursor-pointer ${
-                path == "/dashboard/howit" && "text-black font-bold"
-              }`}
-            >
-              How it works?
-            </li>
-          </Link>
+        <nav className="md:hidden bg-black/70 backdrop-blur-md border-t border-cyan-600/50 shadow-[0_0_20px_cyan]">
+          <ul className="flex flex-col space-y-4 p-5 text-white font-semibold font-['Orbitron']">
+            {[
+              { href: "/dashboard", label: "Dashboard" },
+              { href: "/dashboard/question", label: "Questions" },
+              { href: "/dashboard/upgrade", label: "Upgrade" },
+              { href: "/dashboard/howit", label: "How it works?" },
+            ].map(({ href, label }) => (
+              <li key={href}>
+                <Link href={href} legacyBehavior>
+                  <a
+                    className={`block py-2 px-4 rounded-lg transition-colors ${
+                      path === href
+                        ? "bg-cyan-600 text-white shadow-[0_0_10px_cyan]"
+                        : "hover:bg-cyan-700/50"
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {label}
+                  </a>
+                </Link>
+              </li>
+            ))}
           </ul>
-          </div>
-        </div>
+        </nav>
       )}
-    </div>
+    </header>
   );
 };
 

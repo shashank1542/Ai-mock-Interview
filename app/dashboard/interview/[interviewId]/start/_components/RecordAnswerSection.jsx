@@ -195,7 +195,7 @@ const RecordAnswerSection = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center overflow-hidden">
+    <div className="flex flex-col items-center justify-center overflow-hidden ">
       <div className="flex flex-col justify-center items-center rounded-lg p-5 bg-black mt-4 w-[30rem] ">
         {webCamEnabled ? (
           <Webcam
@@ -211,7 +211,7 @@ const RecordAnswerSection = ({
           />
         )}
       </div>
-      <div className="md:flex mt-4 md:mt-8 md:gap-5">
+      <div className="md:flex mt-4 md:mt-8 md:gap-5 text-black">
         <div className="my-4 md:my-0">
           <Button onClick={() => setWebCamEnabled((prev) => !prev)}>
             {webCamEnabled ? "Close WebCam" : "Enable WebCam"}

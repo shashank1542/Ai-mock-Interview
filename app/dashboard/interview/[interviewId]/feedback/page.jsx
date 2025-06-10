@@ -88,7 +88,7 @@ const Feedback = ({ params }) => {
   return (
     <div className="p-10">
       {feedbackList?.length == 0 ? (
-        <h2 className="font-bold text-xl text-gray-500 my-5">
+        <h2 className="font-bold text-xl text-black my-5">
           No Interview feedback Record Found
         </h2>
       ) : (
@@ -117,7 +117,7 @@ const Feedback = ({ params }) => {
             </strong>
           </h2>
 
-          <h2 className="text-sm text-gray-500">
+          <h2 className="text-sm text-gray-300">
             Find below interview question with correct answer, Your answer, and
             feedback for improvement
           </h2>
@@ -125,7 +125,7 @@ const Feedback = ({ params }) => {
           {feedbackList &&
             feedbackList.map((item, index) => (
               <Collapsible key={index} className="mt-7">
-                <CollapsibleTrigger className="p-2 bg-secondary rounded-lg my-2 text-left flex justify-between gap-7 w-full">
+                <CollapsibleTrigger className="p-2 bg-secondary rounded-lg my-2 text-left flex justify-between gap-7 w-full text-black">
                   {item.question} <ChevronDown className="h-5 w-5" />{" "}
                 </CollapsibleTrigger>
                 <CollapsibleContent>
@@ -144,18 +144,18 @@ const Feedback = ({ params }) => {
                       <strong>Your Answer: </strong>
                       {item.userAns}
                     </h2>
-                    <h2 className="p-2 border rounded-lg bg-green-50 text-sm text-green-900">
+                    <h2 className="p-2 border rounded-lg bg-yellow-50 text-sm text-green-900">
                       <strong>Correct Answer: </strong>
                       {item.correctAns}
                     </h2>
 
                     {/* Display Dual AI Feedback Side-by-Side */}
-                    <h2 className="p-2 border rounded-lg bg-blue-50 text-sm text-primary-900">
+                    <h2 className="p-2 border rounded-lg bg-blue-50 text-sm text-blue-900">
                       <strong>Google Gemini Feedback: </strong>
                       {item.parsedFeedback?.gemini || "No feedback available"}
                     </h2>
 
-                    <h2 className="p-2 border rounded-lg bg-yellow-50 text-sm text-yellow-900">
+                    <h2 className="p-2 border rounded-lg bg-blue-50 text-sm text-blue-900">
                       <strong>Cohere AI Feedback: </strong>
                       {item.parsedFeedback?.cohere || "No feedback available"}
                     </h2>
@@ -166,7 +166,14 @@ const Feedback = ({ params }) => {
         </>
       )}
 
-      <Button onClick={() => router.replace("/dashboard")}>Go Home</Button>
+      <Button
+  variant="outline"
+  className="text-black border-black hover:bg-black hover:text-white"
+  onClick={() => router.replace("/dashboard")}
+>
+  Go Home
+</Button>
+
     </div>
   );
 };
