@@ -105,16 +105,17 @@ Do not include any explanation, markdown syntax (like triple backticks), or extr
   return (
     <div>
       <div
-        className="p-10 rounded-lg border bg-secondary hover:scale-105 hover:shadow-sm transition-all cursor-pointer"
-        onClick={() => setOpenDialog(true)}
-      >
-        <h2 className=" text-lg text-center text-black">+ Add New</h2>
-      </div>
+  className="p-10 rounded-lg border border-gray-700 bg-gray-900 hover:scale-105 hover:shadow-md transition-all cursor-pointer"
+  onClick={() => setOpenDialog(true)}
+>
+  <h2 className="text-lg text-center text-white">+ Add New</h2>
+</div>
+
       <Dialog open={openDailog} onOpenChange={setOpenDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="text-2xl">
-              Tell us more about your job interviwing
+              Tell us more about your job interviewing
             </DialogTitle>
             <DialogDescription>
               <form onSubmit={onSubmit}>

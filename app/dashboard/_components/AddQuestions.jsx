@@ -128,7 +128,7 @@ Target Company: ${company}
         className="p-10 rounded-lg border bg-secondary hover:scale-105 hover:shadow-sm transition-all cursor-pointer"
         onClick={() => setOpenDialog(true)}
       >
-        <h2 className=" text-lg text-black text-center">+ Add New Questions</h2>
+        <h2 className=" text-lg text-black text-center ">+ Add New Questions</h2>
       </div>
 
       <Dialog open={openDailog} onOpenChange={setOpenDialog}>

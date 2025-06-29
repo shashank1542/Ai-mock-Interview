@@ -24,7 +24,7 @@ const Upgrade = () => {
                 <p className="mt-2 sm:mt-4">
                   <strong className="text-3xl font-bold text-white-900 sm:text-4xl">
                     {" "}
-                    {item.price}${" "}
+                    ₹{item.price}{" "}
                   </strong>
 
                   <span className="text-sm font-medium text-white-700">

@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 import { db } from "@/utils/db";
 import { UserAnswer } from "@/utils/schema";
 import { eq } from "drizzle-orm";
@@ -98,7 +98,7 @@ const Feedback = ({ params }) => {
             Here is your interview feedback
           </h2>
 
-          {/* Dual AI Overall Rating */}
+          
           <h2 className="text-primary text-lg my-3">
             Your overall interview rating{" "}
             <strong
@@ -130,7 +130,7 @@ const Feedback = ({ params }) => {
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <div className="flex flex-col gap-2">
-                    {/* Display Dual AI Ratings */}
+                    
                     <h2 className="text-red-500 p-2 border rounded-lg">
                       <strong>Gemini Rating: </strong>
                       {item.parsedRating?.gemini || "N/A"}
@@ -149,7 +149,7 @@ const Feedback = ({ params }) => {
                       {item.correctAns}
                     </h2>
 
-                    {/* Display Dual AI Feedback Side-by-Side */}
+                    
                     <h2 className="p-2 border rounded-lg bg-blue-50 text-sm text-blue-900">
                       <strong>Google Gemini Feedback: </strong>
                       {item.parsedFeedback?.gemini || "No feedback available"}
@@ -174,6 +174,157 @@ const Feedback = ({ params }) => {
   Go Home
 </Button>
 
+    </div>
+  );
+};
+
+export default Feedback;*/
+
+"use client";
+import { db } from "@/utils/db";
+import { UserAnswer } from "@/utils/schema";
+import { eq } from "drizzle-orm";
+import React, { useEffect, useState, useMemo } from "react";
+import { ChevronDown } from "lucide-react";
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+
+const Feedback = ({ params }) => {
+  const router = useRouter();
+  const [feedbackList, setFeedbackList] = useState([]);
+
+  useEffect(() => {
+    GetFeedback();
+  }, []);
+
+  const GetFeedback = async () => {
+    const result = await db
+      .select()
+      .from(UserAnswer)
+      .where(eq(UserAnswer.mockIdRef, params.interviewId))
+      .orderBy(UserAnswer.id);
+
+    const updatedFeedbackList = result.map((item) => {
+      let parsedFeedback = { gemini: "No feedback available", cohere: "No feedback available" };
+      let parsedRating = { gemini: "N/A", cohere: "N/A" };
+
+      try {
+        if (item.feedback) {
+          const cleaned = item.feedback.replace(/```json/g, "").replace(/```/g, "").trim();
+          parsedFeedback = JSON.parse(cleaned);
+        }
+        if (item.rating) {
+          const cleaned = item.rating.replace(/```json/g, "").replace(/```/g, "").trim();
+          parsedRating = JSON.parse(cleaned);
+        }
+      } catch (err) {
+        console.error("Error parsing:", err, item.feedback);
+      }
+
+      return { ...item, parsedFeedback, parsedRating };
+    });
+
+    setFeedbackList(updatedFeedbackList);
+  };
+
+  const overallRating = useMemo(() => {
+    if (feedbackList.length === 0) return { gemini: 0, cohere: 0 };
+
+    const avg = (key) =>
+      (
+        feedbackList.reduce((sum, item) => sum + Number(item.parsedRating?.[key] || 0), 0) /
+        feedbackList.length
+      ).toFixed(1);
+
+    return { gemini: avg("gemini"), cohere: avg("cohere") };
+  }, [feedbackList]);
+
+  return (
+    <div className="p-6 md:p-10 bg-gray-900 text-white min-h-screen">
+      {feedbackList.length === 0 ? (
+        <h2 className="font-bold text-xl text-gray-200 my-5">No Interview Feedback Record Found</h2>
+      ) : (
+        <>
+          <h2 className="text-4xl font-extrabold text-green-400">🎉 Congratulations!</h2>
+          <h2 className="font-semibold text-xl text-gray-100 mt-2">
+            Here's your interview feedback:
+          </h2>
+
+          <div className="my-4 text-base text-gray-300">
+            Overall Rating:
+            <span
+              className={`ml-2 px-3 py-1 rounded-full text-sm font-semibold ${
+                overallRating.gemini >= 5 ? "bg-green-700 text-white" : "bg-red-700 text-white"
+              }`}
+            >
+              Gemini: {overallRating.gemini}/10
+            </span>
+            <span
+              className={`ml-2 px-3 py-1 rounded-full text-sm font-semibold ${
+                overallRating.cohere >= 5 ? "bg-green-700 text-white" : "bg-red-700 text-white"
+              }`}
+            >
+              Cohere: {overallRating.cohere}/10
+            </span>
+          </div>
+
+          <p className="text-sm text-gray-400 mb-6">
+            Below you'll find each question with your answer, the correct answer, and AI feedback.
+          </p>
+
+          {feedbackList.map((item, index) => (
+            <Collapsible key={index} className="mb-5">
+              <CollapsibleTrigger className="bg-gray-800 rounded-lg p-4 shadow-md w-full flex justify-between items-center text-left font-semibold text-gray-100 hover:bg-gray-700 transition">
+                <span>{item.question}</span>
+                <ChevronDown className="h-5 w-5 text-gray-300" />
+              </CollapsibleTrigger>
+
+              <CollapsibleContent className="bg-gray-800 rounded-b-lg px-5 py-4 shadow-inner space-y-4 border border-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-3 rounded-md border border-green-600 bg-green-900 text-green-100 text-sm">
+                    <strong>Correct Answer: </strong> {item.correctAns}
+                  </div>
+                  <div className="p-3 rounded-md border border-red-600 bg-red-900 text-red-100 text-sm">
+                    <strong>Your Answer: </strong> {item.userAns}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-3 rounded-md border border-blue-600 bg-blue-900 text-blue-100 text-sm">
+                    <strong>Gemini Feedback: </strong> {item.parsedFeedback.gemini}
+                  </div>
+                  <div className="p-3 rounded-md border border-blue-600 bg-blue-900 text-blue-100 text-sm">
+                    <strong>Cohere Feedback: </strong> {item.parsedFeedback.cohere}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-3 rounded-md border border-purple-600 bg-purple-900 text-purple-100 text-sm">
+                    <strong>Gemini Rating: </strong> {item.parsedRating.gemini}
+                  </div>
+                  <div className="p-3 rounded-md border border-yellow-600 bg-yellow-900 text-yellow-100 text-sm">
+                    <strong>Cohere Rating: </strong> {item.parsedRating.cohere}
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          ))}
+        </>
+      )}
+
+      <Button
+        variant="outline"
+        className="mt-6 border-white text-black hover:bg-white hover:text-black transition"
+        onClick={() => router.replace("/dashboard")}
+      >
+        Go Home
+      </Button>
     </div>
   );
 };

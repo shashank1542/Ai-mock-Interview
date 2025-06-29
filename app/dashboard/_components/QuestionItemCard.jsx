@@ -9,7 +9,7 @@ const QuestionItemCard = ({ question }) => {
   };
   return (
     <div className="border border-gray-300 shadow-sm rounded-lg p-3">
-      <h2 className="font-bold text-primary">{question?.jobPosition}</h2>
+      <h2 className="font-bold text-primary text-white">{question?.jobPosition}</h2>
       <h2 className="text-sm text-white-100">
         {question?.jobExperience} Years of experience
       </h2>

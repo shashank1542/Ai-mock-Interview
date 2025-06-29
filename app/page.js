@@ -14,7 +14,7 @@ const page = () => {
 
     <div>
       <Head>
-        <title>AI Mock Interview</title>
+        <title>JOBSTACLE</title>
         <meta
           name="description"
           content="Ace your next interview with AI-powered mock interviews"
@@ -23,12 +23,13 @@ const page = () => {
       </Head>
 
       <main className="min-h-screen">
-        {/* Header Section */}
+         {/* Header Section */}
         <header className="w-full sticky top-0 z-50 bg-white shadow-md transition-all duration-300">
           <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6 py-4">
-            <h1 className="text-3xl font-extrabold text-blue-600 hover:tracking-wide transition-all duration-300">
-              AI Mock Interview
-            </h1>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-pink-500 to-purple-500 tracking-wide hover:tracking-wider transition-all duration-300 drop-shadow-sm select-none">
+              JOBSTACLE
+             </h1>
+
 
             <nav className="flex flex-col sm:flex-row items-center mt-4 md:mt-0 space-y-2 sm:space-y-0 sm:space-x-6">
               <a
@@ -144,7 +145,7 @@ const page = () => {
 
         {/* Testimonials Section */}
         <section
-          id="testimonials"
+         id="testimonials"
           className="py-20 bg-gradient-to-br from-white to-blue-50 px-6 md:px-0"
         >
           <div className="max-w-6xl mx-auto text-center">
@@ -196,7 +197,7 @@ const page = () => {
       </main>
 
       <footer className="py-8 bg-black text-white text-center">
-        <p>© 2025 AI Mock Interview. All rights reserved.</p>
+        <p>© 2025 JOBSTACLE. All rights reserved.</p>
       </footer>
     </div>
   );

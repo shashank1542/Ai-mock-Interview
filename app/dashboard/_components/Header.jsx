@@ -40,9 +40,10 @@ const Header = ({ logo }) => {
             alt="logo"
             className="drop-shadow-[0_0_10px_cyan]"
           />
-          <span className="text-2xl font-bold text-cyan-400 tracking-wide select-none">
-            AI Mockup
+          <span className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 tracking-wider select-none drop-shadow-md">
+           JOBSTACLE
           </span>
+
         </Link>
 
         {/* Desktop Navigation */}

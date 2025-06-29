@@ -35,10 +35,10 @@ const Dashboard = () => {
       <div className="flex justify-between items-center z-10 relative">
         <div>
           <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-300 to-pink-400 text-transparent bg-clip-text tracking-wide animate-fade-in-up drop-shadow-md">
-            ⚡ Dashboard
+            ⚡Dashboard
           </h2>
           <p className="text-gray-300 text-sm mt-1 animate-fade-in-up delay-200">
-            Create and start your AI Mock Interview with style
+              Create and start your AI Mock Interview with style
           </p>
         </div>
         <UserButton afterSignOutUrl="/" />
