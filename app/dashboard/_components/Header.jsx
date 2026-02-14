@@ -51,6 +51,8 @@ const Header = ({ logo }) => {
           {[
             { href: "/dashboard", label: "Dashboard" },
             { href: "/dashboard/question", label: "Questions" },
+            // { href: "/dashboard/dsa", label: "DSA" },
+            { href: "https://leetlab.nbaworks.dev/", label: "DSA" },
             { href: "/dashboard/upgrade", label: "Upgrade" },
             { href: "/dashboard/howit", label: "How it works?" },
           ].map(({ href, label }) => (
@@ -119,11 +121,12 @@ const Header = ({ logo }) => {
         <nav className="md:hidden bg-black/70 backdrop-blur-md border-t border-cyan-600/50 shadow-[0_0_20px_cyan]">
           <ul className="flex flex-col space-y-4 p-5 text-white font-semibold font-['Orbitron']">
             {[
-              { href: "/dashboard", label: "Dashboard" },
-              { href: "/dashboard/question", label: "Questions" },
-              { href: "/dashboard/upgrade", label: "Upgrade" },
-              { href: "/dashboard/howit", label: "How it works?" },
-            ].map(({ href, label }) => (
+                { href: "/dashboard", label: "Dashboard" },
+                { href: "/dashboard/question", label: "Questions" },
+                { href: "/dashboard/dsa", label: "DSA" },
+                { href: "/dashboard/upgrade", label: "Upgrade" },
+                { href: "/dashboard/howit", label: "How it works?" },
+              ].map(({ href, label }) => (
               <li key={href}>
                 <Link href={href} legacyBehavior>
                   <a
