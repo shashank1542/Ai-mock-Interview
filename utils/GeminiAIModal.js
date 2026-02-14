@@ -1,4 +1,3 @@
-
 const {
   GoogleGenerativeAI,
   HarmCategory,
@@ -8,8 +7,10 @@ const {
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
+//  We remove the { apiVersion } object which often causes the 404 mismatch.
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  // Using gemini-2.5-flash(flash models only for now)
+  model: "gemini-2.5-flash",
 });
 
 const generationConfig = {
@@ -17,7 +18,6 @@ const generationConfig = {
   topP: 0.95,
   topK: 64,
   maxOutputTokens: 8192,
-  responseMimeType: "text/plain",
 };
 
 const safetySettings = [
@@ -31,7 +31,9 @@ const safetySettings = [
   },
 ];
 
+// Start and export the session
 export const chatSession = model.startChat({
   generationConfig,
-  safetySettings
+  safetySettings,
+  history: [], // It's good practice to initialize an empty history
 });

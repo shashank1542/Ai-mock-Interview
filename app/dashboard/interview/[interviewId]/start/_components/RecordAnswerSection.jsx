@@ -30,12 +30,6 @@ const RecordAnswerSection = ({
 
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
-  useEffect(() => {
-    if (!isRecording && userAnswer.length > 10) {
-      updateUserAnswer();
-    }
-  }, [userAnswer]);
-
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -73,26 +67,35 @@ const RecordAnswerSection = ({
   const transcribeAudio = async (audioBlob) => {
     try {
       setLoading(true);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      // Convert audio blob to base64
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
-      reader.onloadend = async () => {
-        const base64Audio = reader.result.split(",")[1];
+      const formData = new FormData();
+      formData.append("audio", audioBlob, "audio.webm");
 
-        const result = await model.generateContent([
-          "Transcribe the following audio:",
-          { inlineData: { data: base64Audio, mimeType: "audio/webm" } },
-        ]);
+      const response = await fetch("http://localhost:5000/transcribe", {
+        method: "POST",
+        body: formData,
+      });
 
-        const transcription = result.response.text();
-        setUserAnswer((prevAnswer) => prevAnswer + " " + transcription);
+      const data = await response.json();
+      console.log("Whisper response:", data);
+
+      if (!data.text || data.text.trim().length < 5) {
+        toast("No speech detected. Please speak louder.");
         setLoading(false);
-      };
+        return;
+      }
+
+      const finalAnswer = userAnswer + " " + data.text;
+
+      setUserAnswer(finalAnswer);
+
+      // 🔥 DIRECTLY SAVE + GET FEEDBACK
+      await updateUserAnswer(finalAnswer);
+
+      setLoading(false);
     } catch (error) {
-      console.error("Error transcribing audio:", error);
-      toast("Error transcribing audio. Please try again.");
+      console.error("Whisper error:", error);
+      toast("Whisper transcription failed");
       setLoading(false);
     }
   };
@@ -119,37 +122,35 @@ const RecordAnswerSection = ({
     }
   };
 
-  const updateUserAnswer = async () => {
+  const updateUserAnswer = async (finalAnswer) => {
     try {
       setLoading(true);
 
       const feedbackPrompt = `Question: ${mockInterviewQuestion[activeQuestionIndex]?.Question}
-         User Answer: ${userAnswer}
+         User Answer: ${finalAnswer}
          Provide a rating (1-10) and feedback for improvement in JSON format with 'rating' and 'feedback' fields.`;
 
       // Fetch AI feedback from both Gemini & Cohere
       const geminiResponse = await chatSession.sendMessage(feedbackPrompt);
+
       const cohereFeedbackResp = await getCohereFeedback(
-        userAnswer,
+        finalAnswer,
         mockInterviewQuestion[activeQuestionIndex]?.Question
       );
-      console.log("Cohere Feedback:", cohereFeedbackResp); // Debugging log
+
+      console.log("Cohere Feedback:", cohereFeedbackResp);
 
       // Extract Gemini feedback
       let MockJsonResp = await geminiResponse.response.text();
 
-      // Ensure we extract valid JSON by finding where it starts
       const jsonStartIndex = MockJsonResp.indexOf("{");
       if (jsonStartIndex !== -1) {
         MockJsonResp = MockJsonResp.substring(jsonStartIndex).trim();
       }
 
-      // Clean unwanted markdown formatting
       MockJsonResp = MockJsonResp.replace(/```json/g, "")
         .replace(/```/g, "")
         .trim();
-
-      console.log("Cleaned Gemini Response:", MockJsonResp); // Debugging
 
       let geminiFeedbackResp;
       try {
@@ -159,17 +160,15 @@ const RecordAnswerSection = ({
         geminiFeedbackResp = { rating: "N/A", feedback: MockJsonResp };
       }
 
-      // ✅ Declare fallback values for Cohere AI before saving
       const safeCohereFeedback =
         cohereFeedbackResp?.feedback || "Cohere AI feedback unavailable";
       const safeCohereRating = cohereFeedbackResp?.rating || "N/A";
 
-      // Store both AI responses in the database
       const resp = await db.insert(UserAnswer).values({
         mockIdRef: interviewData?.mockId,
         question: mockInterviewQuestion[activeQuestionIndex]?.Question,
         correctAns: mockInterviewQuestion[activeQuestionIndex]?.Answer,
-        userAns: userAnswer,
+        userAns: finalAnswer, // 👈 IMPORTANT
         feedback: JSON.stringify({
           gemini: geminiFeedbackResp.feedback,
           cohere: safeCohereFeedback,
@@ -185,6 +184,7 @@ const RecordAnswerSection = ({
       if (resp) {
         toast("User Answer recorded successfully with dual AI feedback!");
       }
+
       setUserAnswer("");
       setLoading(false);
     } catch (error) {
